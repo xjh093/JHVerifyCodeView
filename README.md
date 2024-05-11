@@ -13,6 +13,9 @@ Enjoy yourself!🥳🥳🥳
 
 # Logs
 
+version: 1.0.1
+- 2024-05-11
+
 version: 1.0.0
 - 2020-09-22
 
