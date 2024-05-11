@@ -121,7 +121,8 @@ open class JHVerifyCodeView: UIView {
     private var textField: UITextField = UITextField()
     private var inputFinish: Bool = false
     private var inputFinishIndex: Int = 0
-    
+    /// 存放光标 --- 2024-05-11 15:14:14
+    private var layerArray = [CAShapeLayer]()
     
     required public init?(coder: NSCoder) {
         super.init(coder: coder)
@@ -230,6 +231,7 @@ open class JHVerifyCodeView: UIView {
                         layer.isHidden = true
                     }
                     
+                    layerArray.append(layer)
                     textField.layer.addSublayer(layer)
                 }
             }
@@ -348,9 +350,8 @@ open class JHVerifyCodeView: UIView {
                 textField.layer.borderColor = config.inputBoxColor?.cgColor
             }
             
-            if config.showFlickerAnimation {
-                let sublayers: NSArray = textField.layer.sublayers! as NSArray
-                let layer: CALayer = sublayers[0] as! CALayer
+            if config.showFlickerAnimation && layerArray.count > i {
+                let layer = layerArray[i]
                 layer.isHidden = true
                 layer.removeAnimation(forKey: "kFlickerAnimation")
             }
@@ -363,11 +364,8 @@ open class JHVerifyCodeView: UIView {
     }
     
     func flickerAnimation(_ text: NSString) {
-        if config.showFlickerAnimation && text.length < self.subviews.count {
-            let subviews: NSArray = self.subviews as NSArray
-            let textField = subviews[text.length] as! UITextField
-            let sublayers: NSArray = textField.layer.sublayers! as NSArray
-            let layer: CALayer = sublayers[0] as! CALayer
+        if config.showFlickerAnimation && text.length < layerArray.count {
+            let layer = layerArray[text.length]
             layer.isHidden = false
             layer.add(alphaAnimation(), forKey: "kFlickerAnimation")
         }
